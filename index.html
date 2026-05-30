@@ -111,6 +111,20 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
 .field-err{border-color:rgba(239,68,68,0.55)!important;box-shadow:0 0 0 3px rgba(239,68,68,0.1)!important;}
 .form-err{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.28);color:#fca5a5;padding:10px 14px;border-radius:8px;font-size:0.8rem;display:none;align-items:center;gap:8px;margin-top:0.75rem;}
 .form-err.show{display:flex;}
+.privacy-block{margin-top:1.25rem;border:1px solid rgba(255,255,255,0.1);border-radius:12px;background:rgba(255,255,255,0.03);overflow:hidden;}
+.privacy-details summary{list-style:none;cursor:pointer;padding:12px 14px;font-size:0.82rem;font-weight:600;color:#7dd3fc;display:flex;align-items:center;justify-content:space-between;gap:8px;user-select:none;}
+.privacy-details summary::-webkit-details-marker{display:none;}
+.privacy-details summary::after{content:'▾';font-size:0.75rem;color:rgba(255,255,255,0.4);transition:transform .2s;}
+.privacy-details[open] summary::after{transform:rotate(180deg);}
+.privacy-details summary:hover{background:rgba(125,211,252,0.06);}
+.privacy-body{max-height:220px;overflow-y:auto;padding:0 14px 14px;font-size:0.78rem;line-height:1.65;color:rgba(255,255,255,0.55);border-top:1px solid rgba(255,255,255,0.07);}
+.privacy-body h4{font-family:'Sora',sans-serif;font-size:0.8rem;color:rgba(255,255,255,0.82);margin:12px 0 6px;}
+.privacy-body h4:first-child{margin-top:4px;}
+.privacy-body ul{margin:6px 0 10px 1.1rem;}
+.privacy-body li{margin-bottom:4px;}
+.privacy-check{display:flex;align-items:flex-start;gap:10px;margin-top:1rem;padding:12px 14px;border:1px solid rgba(255,255,255,0.1);border-radius:10px;background:rgba(255,255,255,0.03);cursor:pointer;font-size:0.8rem;line-height:1.5;color:rgba(255,255,255,0.72);}
+.privacy-check input{margin-top:3px;width:16px;height:16px;accent-color:#7dd3fc;flex-shrink:0;cursor:pointer;}
+.privacy-check.field-err{border-color:rgba(239,68,68,0.45);background:rgba(239,68,68,0.06);}
 .thankyou-screen{display:none;text-align:center;padding:1rem 0;}
 .thankyou-screen.show{display:block;}
 .ty-glow{width:78px;height:78px;border-radius:50%;margin:0 auto 1.5rem;background:radial-gradient(circle at 35% 35%,rgba(125,211,252,0.55),rgba(139,92,246,0.3));border:1px solid rgba(125,211,252,0.4);display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 0 36px rgba(125,211,252,0.4);}
@@ -228,6 +242,18 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
       <div class="sec-title" id="reg-members-title">👨‍👩‍👧 Household Members <span id="reg-members-opt" style="font-size:0.7rem;font-weight:400;color:rgba(255,255,255,0.28);margin-left:4px;">(optional)</span></div>
       <div id="members-container"></div>
       <button class="add-member-btn" id="reg-add-btn" onclick="addMember()">+ Add Household Member</button>
+
+      <div class="privacy-block">
+        <details class="privacy-details" id="privacy-details">
+          <summary id="privacy-toggle">Read Privacy Notice and Consent</summary>
+          <div class="privacy-body" id="privacy-body"></div>
+        </details>
+        <label class="privacy-check" id="privacy-check-wrap">
+          <input type="checkbox" id="privacy-consent">
+          <span id="privacy-check-label">I agree to the Privacy Notice and consent to the processing of my personal information.</span>
+        </label>
+      </div>
+
       <div class="form-err" id="form-err">⚠ Please fill in all required fields.</div>
       <button class="submit-btn" id="submit-btn" onclick="submitRegistration()">✓ &nbsp;Submit Registration</button>
     </div>
@@ -327,6 +353,16 @@ async function submitRegistration(){
   });
 
   if(hasErr){ err.innerHTML='⚠ '+escBrandHtml(getBrand().regErr); err.classList.add('show'); return; }
+
+  const consent = document.getElementById('privacy-consent');
+  const consentWrap = document.getElementById('privacy-check-wrap');
+  if(!consent || !consent.checked){
+    consentWrap && consentWrap.classList.add('field-err');
+    err.innerHTML='⚠ '+escBrandHtml(getBrand().regConsentErr || 'Please agree to the Privacy Notice before submitting.');
+    err.classList.add('show');
+    return;
+  }
+  consentWrap && consentWrap.classList.remove('field-err');
   err.classList.remove('show');
 
   const btn=document.getElementById('submit-btn');
@@ -357,6 +393,8 @@ function resetForm(){
   document.getElementById('members-container').innerHTML=''; memberCount=0;
   document.getElementById('form-err').classList.remove('show');
   [...document.querySelectorAll('.field-err')].forEach(e=>e.classList.remove('field-err'));
+  const consent=document.getElementById('privacy-consent'); if(consent) consent.checked=false;
+  const details=document.getElementById('privacy-details'); if(details) details.open=false;
   const btn=document.getElementById('submit-btn'); btn.disabled=false; btn.innerHTML='✓ &nbsp;'+escBrandHtml(getBrand().regSubmit);
   document.getElementById('form-view').style.display='block';
   document.getElementById('thankyou-view').classList.remove('show');
