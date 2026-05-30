@@ -1,7 +1,0 @@
-{
-  "name": "boogs-kapatungan",
-  "private": true,
-  "scripts": {
-    "build": "node scripts/write-config.js"
-  }
-}
