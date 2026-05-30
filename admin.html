@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
+<script src="branding.js"></script>
 <style>
 :root{--bg:#0d0f1a;--surface:#131627;--surface2:#1a1e35;--border:rgba(255,255,255,0.08);--text:#f0f2ff;--text-muted:rgba(255,255,255,0.45);--radius:14px;--radius-sm:9px;}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -40,6 +41,15 @@ select option{background:#131627;}optgroup{background:#06081e;font-style:normal;
 .save-msg.err{display:flex;align-items:center;gap:8px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:#fca5a5;}
 .settings-btn{background:linear-gradient(135deg,#7dd3fc,#818cf8);color:#05071a;border:none;padding:11px 28px;border-radius:9px;font-weight:700;font-family:'Sora',sans-serif;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
 .settings-btn.secondary{background:none;border:1px solid var(--border);color:var(--text-muted);font-family:'DM Sans',sans-serif;font-weight:500;}
+.logo-upload-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:1rem;}
+.logo-preview{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;flex-shrink:0;}
+.logo-preview img{width:100%;height:100%;object-fit:cover;}
+.logo-file-btn{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text);padding:9px 16px;border-radius:9px;cursor:pointer;font-size:0.85rem;}
+.logo-file-btn input{display:none;}
+.feat-edit-row{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;}
+.feat-edit-row label{font-size:0.68rem;}
+.feat-edit-grid{display:grid;grid-template-columns:48px 1fr;gap:8px 10px;align-items:start;}
+.feat-edit-grid .icon-in{width:48px;text-align:center;font-size:1.2rem;}
 .admin-app{display:none;min-height:100vh;}
 .admin-app.show{display:block;}
 .admin-header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:62px;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);}
@@ -222,7 +232,7 @@ select option{background:#131627;}optgroup{background:#06081e;font-style:normal;
     <div class="apage" id="apage-settings">
       <div class="settings-block">
         <div class="settings-block-title">Admin account</div>
-        <div class="settings-block-sub">Change your admin username or password. Works on all devices after you run <code style="color:#7dd3fc;">supabase-admin-settings.sql</code> in Supabase.</div>
+        <div class="settings-block-sub">Change username or password here. After one-time SQL setup in Supabase, the new login works on every device.</div>
         <div class="field"><label>Username</label><input type="text" id="acct-user" placeholder="admin" autocomplete="username"></div>
         <div class="field"><label>Current password</label><input type="password" id="acct-current" placeholder="Current password" autocomplete="current-password"></div>
         <div class="field"><label>New password</label><input type="password" id="acct-new" placeholder="At least 6 characters" autocomplete="new-password"></div>
@@ -235,40 +245,72 @@ select option{background:#131627;}optgroup{background:#06081e;font-style:normal;
       <hr class="settings-divider">
 
       <div class="settings-block">
-        <div class="settings-block-title">Site branding &amp; public page text</div>
-        <div class="settings-block-sub">Saved in this browser. Reload the public page to see changes. Same browser = same edits for admin and public tabs.</div>
+        <div class="settings-block-title">Site branding &amp; public page</div>
+        <div class="settings-block-sub">Upload a logo, edit all header text, hero, features, and registration form. Saves to Supabase so every visitor sees the same site. Run <code style="color:#7dd3fc;">supabase-site-branding.sql</code> once if save fails.</div>
 
-        <div class="settings-subhead">Header &amp; logo</div>
-        <div class="field"><label>Site name (nav)</label><input type="text" id="brand-name" placeholder="Boogs Community Management System" oninput="previewBranding()"></div>
-        <div class="field"><label>Nav subtitle</label><input type="text" id="brand-nav-sub" placeholder="Brgy. Kapatungan · Trento, Agusan del Sur"></div>
-        <div class="field"><label>Logo emoji</label><input type="text" id="brand-emoji" placeholder="🏘️" style="width:80px;text-align:center;font-size:1.4rem;" oninput="previewBranding()"></div>
+        <div class="settings-subhead">Logo &amp; header</div>
+        <div class="logo-upload-row">
+          <div class="logo-preview" id="prev-logo">🏘️</div>
+          <label class="logo-file-btn"><i class="fa-solid fa-upload"></i> Upload logo<input type="file" id="brand-logo-file" accept="image/png,image/jpeg,image/webp,image/gif" onchange="onLogoUpload(event)"></label>
+          <button type="button" class="settings-btn secondary" onclick="clearLogo()">Remove logo</button>
+        </div>
+        <div class="field"><label>Logo image URL (optional)</label><input type="url" id="brand-logo-url" placeholder="https://..." oninput="previewBranding()"></div>
+        <div class="field"><label>Logo emoji (if no image)</label><input type="text" id="brand-emoji" placeholder="🏘️" style="width:80px;text-align:center;font-size:1.4rem;" oninput="previewBranding()"></div>
+        <div class="field"><label>Browser tab title</label><input type="text" id="brand-page-title" placeholder="Boogs Community Management System — Brgy. Kapatungan"></div>
+        <div class="field"><label>Site name (header)</label><input type="text" id="brand-name" placeholder="Boogs Community Management System" oninput="previewBranding()"></div>
+        <div class="field"><label>Header subtitle</label><input type="text" id="brand-nav-sub" placeholder="Brgy. Kapatungan · Trento, Agusan del Sur" oninput="previewBranding()"></div>
+        <div class="field"><label>Admin link text</label><input type="text" id="brand-admin-link" placeholder="Admin"></div>
+        <div class="field"><label>Nav scroll button</label><input type="text" id="brand-nav-scroll" placeholder="Our Purpose ↓"></div>
 
         <div class="settings-subhead">Hero section</div>
         <div class="field"><label>Hero big title</label><input type="text" id="brand-tagline" placeholder="BOOGS" oninput="previewBranding()"></div>
-        <div class="field"><label>Hero subtitle</label><input type="text" id="brand-hero-sub" placeholder="Community Management System"></div>
+        <div class="field"><label>Hero subtitle</label><input type="text" id="brand-hero-sub" placeholder="Community Management System" oninput="previewBranding()"></div>
         <div class="field"><label>Location badge</label><input type="text" id="brand-hero-loc" placeholder="Brgy. Kapatungan · Trento, Agusan del Sur"></div>
+        <div class="field"><label>Purpose icon</label><input type="text" id="brand-purpose-icon" placeholder="📋" style="width:60px;text-align:center;font-size:1.2rem;"></div>
         <div class="field"><label>Purpose banner</label><textarea id="brand-purpose" placeholder="Short explanation of why you collect data"></textarea></div>
         <div class="field"><label>Hero description</label><textarea id="brand-hero-body" placeholder="Main paragraph under the banner"></textarea></div>
         <div class="field"><label>Register button text</label><input type="text" id="brand-cta" placeholder="Register Your Household"></div>
         <div class="field"><label>Button note (small text)</label><input type="text" id="brand-cta-note" placeholder="Free · Takes under a minute · No account needed"></div>
-        <div class="field"><label>Nav scroll button</label><input type="text" id="brand-nav-scroll" placeholder="Our Purpose ↓"></div>
+        <div class="field"><label>Stat: households label</label><input type="text" id="brand-stat-hh" placeholder="Households"></div>
+        <div class="field"><label>Stat: individuals label</label><input type="text" id="brand-stat-ind" placeholder="Individuals"></div>
+        <div class="field"><label>Stat: puroks label</label><input type="text" id="brand-stat-purok-lbl" placeholder="Puroks"></div>
+        <div class="field"><label>Stat: purok count number</label><input type="text" id="brand-stat-purok-num" placeholder="22"></div>
 
-        <div class="settings-subhead">Lower section</div>
+        <div class="settings-subhead">Why we collect data section</div>
         <div class="field"><label>Section title</label><input type="text" id="brand-feat-title" placeholder="WHY WE COLLECT THIS DATA"></div>
         <div class="field"><label>Section description</label><textarea id="brand-feat-desc"></textarea></div>
         <div class="field"><label>Disclaimer</label><input type="text" id="brand-disclaimer" placeholder="This is NOT a campaign activity."></div>
         <div class="field"><label>Bottom register button</label><input type="text" id="brand-cta-bottom" placeholder="Register Your Household Now"></div>
-        <div class="field"><label>Registration modal subtitle</label><input type="text" id="brand-modal-sub" placeholder="Brgy. Kapatungan · Trento, Agusan del Sur"></div>
+        <div class="settings-subhead" style="margin-top:1rem;">Feature cards</div>
+        <div id="feat-edit-list"></div>
+
+        <div class="settings-subhead">Registration page</div>
+        <div class="field"><label>Modal title</label><input type="text" id="brand-modal-title" placeholder="REGISTRATION"></div>
+        <div class="field"><label>Modal subtitle</label><input type="text" id="brand-modal-sub" placeholder="Brgy. Kapatungan · Trento, Agusan del Sur"></div>
+        <div class="field"><label>Head of household section</label><input type="text" id="brand-reg-hof" placeholder="🏠 Head of Household"></div>
+        <div class="field"><label>Members section title</label><input type="text" id="brand-reg-members" placeholder="👨‍👩‍👧 Household Members"></div>
+        <div class="field"><label>Members optional note</label><input type="text" id="brand-reg-members-opt" placeholder="(optional)"></div>
+        <div class="field"><label>Add member button</label><input type="text" id="brand-reg-add" placeholder="+ Add Household Member"></div>
+        <div class="field"><label>Submit button</label><input type="text" id="brand-reg-submit" placeholder="Submit Registration"></div>
+        <div class="field"><label>Form error message</label><input type="text" id="brand-reg-err" placeholder="Please fill in all required fields."></div>
+        <div class="field"><label>Label: full name</label><input type="text" id="brand-reg-label-name" placeholder="Full Name"></div>
+        <div class="field"><label>Label: phone</label><input type="text" id="brand-reg-label-phone" placeholder="Phone Number"></div>
+        <div class="field"><label>Label: age</label><input type="text" id="brand-reg-label-age" placeholder="Age"></div>
+        <div class="field"><label>Label: purok</label><input type="text" id="brand-reg-label-purok" placeholder="Sitio / Purok — type to search"></div>
+        <div class="field"><label>Thank you title</label><input type="text" id="brand-ty-title" placeholder="DAGHANG SALAMAT!"></div>
+        <div class="field"><label>Thank you message</label><textarea id="brand-ty-body" placeholder="Message after successful registration. Use &lt;br&gt; for line breaks."></textarea></div>
+        <div class="field"><label>Register again button</label><input type="text" id="brand-ty-again" placeholder="Register Another Household"></div>
 
         <div style="display:flex;gap:10px;margin-top:0.5rem;">
           <button type="button" onclick="saveBranding()" class="settings-btn"><i class="fa-solid fa-floppy-disk"></i> Save all</button>
           <button type="button" onclick="resetBranding()" class="settings-btn secondary">Reset defaults</button>
         </div>
-        <div id="brand-saved" class="save-msg ok"><i class="fa-solid fa-circle-check"></i> Saved! Reload the public page to see updates.</div>
+        <div id="brand-saved" class="save-msg ok"><i class="fa-solid fa-circle-check"></i> <span id="brand-saved-text">Saved!</span></div>
+        <div id="brand-err" class="save-msg err" style="display:none;"><i class="fa-solid fa-circle-exclamation"></i> <span id="brand-err-text"></span></div>
         <div style="margin-top:2rem;border-top:1px solid var(--border);padding-top:1.5rem;">
-          <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Preview</div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Header preview</div>
           <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:12px;margin-bottom:1rem;">
-            <div id="prev-logo" style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:20px;">🏘️</div>
+            <div id="prev-logo-sm" class="logo-preview" style="width:38px;height:38px;font-size:18px;">🏘️</div>
             <div><div id="prev-name" style="font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text);">Boogs Community Management System</div><div id="prev-nav-sub" style="font-size:0.68rem;color:var(--text-muted);">Brgy. Kapatungan · Trento, Agusan del Sur</div></div>
           </div>
           <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
@@ -291,15 +333,35 @@ const SITIOS=['Main Kapatungan','Sitio Cahian','Sitio Antoquia','Sitio San Anton
 const SITIO_COLORS=['#38bdf8','#818cf8','#2dd4bf','#f472b6','#fb923c'];
 const AGE_GROUPS=[{label:'Under 18',min:0,max:17,color:'#34d399'},{label:'18 – 35',min:18,max:35,color:'#38bdf8'},{label:'36 – 59',min:36,max:59,color:'#818cf8'},{label:'60+',min:60,max:999,color:'#fb923c'}];
 
-function getFallbackCredentials(){
+function getConfigCredentials(){
   return { user: window.ADMIN_USER || 'admin', pass: window.ADMIN_PASS || 'admin123' };
 }
 
+async function getAdminFromDb(){
+  const { data, error } = await sb.from('admin_settings').select('admin_user, admin_pass').eq('id', 1).maybeSingle();
+  if(error || !data) return null;
+  return { user: data.admin_user, pass: data.admin_pass };
+}
+
+function getLocalCredentials(){
+  try {
+    const o = JSON.parse(localStorage.getItem('admin_credentials') || 'null');
+    if(o?.user && o?.pass) return o;
+  } catch(e) {}
+  return null;
+}
+
+async function getActiveCredentials(){
+  const db = await getAdminFromDb();
+  if(db) return db;
+  const local = getLocalCredentials();
+  if(local) return local;
+  return getConfigCredentials();
+}
+
 async function verifyLogin(u, p){
-  const { data, error } = await sb.rpc('verify_admin', { p_user: u, p_pass: p });
-  if(!error && data === true) return true;
-  const fb = getFallbackCredentials();
-  return u === fb.user && p === fb.pass;
+  const creds = await getActiveCredentials();
+  return u === creds.user && p === creds.pass;
 }
 
 function showLoginApp(user){
@@ -335,9 +397,9 @@ function switchTab(tab,el){
   if(tab==='settings') loadSettingsFields();
 }
 
-function loadSettingsFields(){
-  loadBrandingFields();
-  document.getElementById('acct-user').value = sessionAdminUser || getFallbackCredentials().user;
+async function loadSettingsFields(){
+  await loadBrandingFields();
+  document.getElementById('acct-user').value = sessionAdminUser || getConfigCredentials().user;
   document.getElementById('acct-current').value = '';
   document.getElementById('acct-new').value = '';
   document.getElementById('acct-confirm').value = '';
@@ -378,14 +440,20 @@ async function saveAdminAccount(){
   if(newPass.length < 6){ showAcctErr('New password must be at least 6 characters.'); return; }
   if(newPass !== confirm){ showAcctErr('New passwords do not match.'); return; }
 
-  const { data, error } = await sb.rpc('change_admin_credentials', {
-    p_current_user: sessionAdminUser,
-    p_current_pass: curPass,
-    p_new_user: newUser,
-    p_new_pass: newPass
-  });
+  const creds = await getActiveCredentials();
+  if(sessionAdminUser !== creds.user || curPass !== creds.pass){
+    showAcctErr('Current password is incorrect.');
+    return;
+  }
 
-  if(!error && data === true){
+  const { data, error } = await sb.from('admin_settings')
+    .update({ admin_user: newUser, admin_pass: newPass, updated_at: new Date().toISOString() })
+    .eq('id', 1)
+    .eq('admin_user', sessionAdminUser)
+    .eq('admin_pass', curPass)
+    .select('admin_user');
+
+  if(!error && data && data.length){
     sessionAdminUser = newUser;
     document.getElementById('acct-current').value = '';
     document.getElementById('acct-new').value = '';
@@ -394,23 +462,22 @@ async function saveAdminAccount(){
     return;
   }
 
-  if(error && (error.code === 'PGRST202' || error.message?.includes('change_admin_credentials'))){
-    showAcctErr('Run supabase-admin-settings.sql in Supabase SQL Editor first, then try again.');
+  if(error && (error.code === 'PGRST205' || error.code === '42P01' || String(error.message||'').includes('admin_settings'))){
+    localStorage.setItem('admin_credentials', JSON.stringify({ user: newUser, pass: newPass }));
+    sessionAdminUser = newUser;
+    document.getElementById('acct-current').value = '';
+    document.getElementById('acct-new').value = '';
+    document.getElementById('acct-confirm').value = '';
+    showAcctOk('Saved on this browser. Run the SQL below in Supabase to sync on all devices.');
     return;
   }
 
-  if(await verifyLogin(sessionAdminUser, curPass) && newPass === curPass && newUser === sessionAdminUser){
+  if(newPass === curPass && newUser === sessionAdminUser){
     showAcctErr('New login is the same as the current one.');
     return;
   }
 
-  const fb = getFallbackCredentials();
-  if(sessionAdminUser === fb.user && curPass === fb.pass){
-    showAcctErr('Run supabase-admin-settings.sql in Supabase to enable password changes on the live site.');
-    return;
-  }
-
-  showAcctErr('Current password is incorrect, or update failed.');
+  showAcctErr('Update failed. Run the SQL in Supabase SQL Editor, then try again.');
 }
 
 async function fetchAll(){
@@ -532,57 +599,135 @@ async function exportCSV(){
   a.download='kapatungan-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
 }
 
-const BD={
-  name:'Boogs Community Management System',
-  emoji:'🏘️',
-  tagline:'BOOGS',
-  navSub:'Brgy. Kapatungan · Trento, Agusan del Sur',
-  heroSub:'Community Management System',
-  heroLoc:'Brgy. Kapatungan · Trento, Agusan del Sur',
-  purpose:'This system helps us organize household information to better coordinate community programs for Brgy. Kapatungan residents.',
-  heroBody:'Register your household and help us map out our community — emergency response, health programs, relief coordination, and more.',
-  cta:'Register Your Household',
-  ctaNote:'Free · Takes under a minute · No account needed',
-  navScroll:'Our Purpose ↓',
-  featTitle:'WHY WE COLLECT THIS DATA',
-  featDesc:"We put this together so no one in the community gets left out — whether it's relief goods, health programs, or just knowing who to call in an emergency.",
-  disclaimer:'This is NOT a campaign activity.',
-  ctaBottom:'Register Your Household Now',
-  modalSub:'Brgy. Kapatungan · Trento, Agusan del Sur'
-};
-const BRAND_IDS=[
-  ['brand-name','name'],['brand-emoji','emoji'],['brand-tagline','tagline'],
-  ['brand-nav-sub','navSub'],['brand-hero-sub','heroSub'],['brand-hero-loc','heroLoc'],
-  ['brand-purpose','purpose'],['brand-hero-body','heroBody'],['brand-cta','cta'],
-  ['brand-cta-note','ctaNote'],['brand-nav-scroll','navScroll'],['brand-feat-title','featTitle'],
-  ['brand-feat-desc','featDesc'],['brand-disclaimer','disclaimer'],['brand-cta-bottom','ctaBottom'],
-  ['brand-modal-sub','modalSub']
+const BD = window.BRAND_DEFAULTS;
+let pendingLogoDataUrl = null;
+
+const BRAND_IDS = [
+  ['brand-page-title', 'pageTitle'], ['brand-name', 'name'], ['brand-emoji', 'emoji'], ['brand-logo-url', 'logoUrl'],
+  ['brand-tagline', 'tagline'], ['brand-nav-sub', 'navSub'], ['brand-admin-link', 'adminLink'],
+  ['brand-hero-sub', 'heroSub'], ['brand-hero-loc', 'heroLoc'], ['brand-purpose-icon', 'purposeIcon'],
+  ['brand-purpose', 'purpose'], ['brand-hero-body', 'heroBody'], ['brand-cta', 'cta'],
+  ['brand-cta-note', 'ctaNote'], ['brand-nav-scroll', 'navScroll'],
+  ['brand-stat-hh', 'statHouseholds'], ['brand-stat-ind', 'statIndividuals'],
+  ['brand-stat-purok-lbl', 'statPuroks'], ['brand-stat-purok-num', 'statPurokNum'],
+  ['brand-feat-title', 'featTitle'], ['brand-feat-desc', 'featDesc'],
+  ['brand-disclaimer', 'disclaimer'], ['brand-cta-bottom', 'ctaBottom'],
+  ['brand-modal-title', 'modalTitle'], ['brand-modal-sub', 'modalSub'],
+  ['brand-reg-hof', 'regHof'], ['brand-reg-members', 'regMembers'], ['brand-reg-members-opt', 'regMembersOpt'],
+  ['brand-reg-add', 'regAdd'], ['brand-reg-submit', 'regSubmit'], ['brand-reg-err', 'regErr'],
+  ['brand-reg-label-name', 'regLabelName'], ['brand-reg-label-phone', 'regLabelPhone'],
+  ['brand-reg-label-age', 'regLabelAge'], ['brand-reg-label-purok', 'regLabelPurok'],
+  ['brand-ty-title', 'tyTitle'], ['brand-ty-body', 'tyBody'], ['brand-ty-again', 'tyAgain']
 ];
-function getStoredBranding(){ return {...BD,...JSON.parse(localStorage.getItem('site_branding')||'{}')}; }
-function readBrandingForm(){
-  const o={};
-  BRAND_IDS.forEach(([id,key])=>{ o[key]=document.getElementById(id).value.trim()||BD[key]; });
-  return o;
+
+function buildFeatEditors(features) {
+  const list = document.getElementById('feat-edit-list');
+  if (!list) return;
+  list.innerHTML = (features || BD.features).map((f, i) =>
+    '<div class="feat-edit-row"><div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:8px;">Card ' + (i + 1) + '</div>' +
+    '<div class="feat-edit-grid"><input class="icon-in" type="text" id="feat-icon-' + i + '" value="' + esc(f.icon) + '" title="Icon">' +
+    '<input type="text" id="feat-title-' + i + '" value="' + esc(f.title) + '" placeholder="Title"></div>' +
+    '<div class="field" style="margin:8px 0 0;"><textarea id="feat-desc-' + i + '" style="min-height:56px;">' + esc(f.desc) + '</textarea></div></div>'
+  ).join('');
 }
-function loadBrandingFields(){
-  const b=getStoredBranding();
-  BRAND_IDS.forEach(([id,key])=>{ const el=document.getElementById(id); if(el) el.value=b[key]||BD[key]; });
+
+function readFeaturesFromForm() {
+  return (BD.features || []).map((def, i) => ({
+    icon: document.getElementById('feat-icon-' + i)?.value.trim() || def.icon,
+    title: document.getElementById('feat-title-' + i)?.value.trim() || def.title,
+    desc: document.getElementById('feat-desc-' + i)?.value.trim() || def.desc
+  }));
+}
+
+async function getStoredBranding() {
+  return mergeBrand(await fetchBrandFromSupabase(sb));
+}
+
+function readBrandingForm() {
+  const o = {};
+  BRAND_IDS.forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    o[key] = el ? el.value.trim() || BD[key] : BD[key];
+  });
+  o.features = readFeaturesFromForm();
+  if (pendingLogoDataUrl !== null) o.logoDataUrl = pendingLogoDataUrl;
+  else o.logoDataUrl = getLocalBrand().logoDataUrl || '';
+  if (!o.logoDataUrl) o.logoUrl = o.logoUrl || getLocalBrand().logoUrl || '';
+  return mergeBrand(o);
+}
+
+async function loadBrandingFields() {
+  const b = await getStoredBranding();
+  pendingLogoDataUrl = b.logoDataUrl || null;
+  BRAND_IDS.forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = b[key] || BD[key] || '';
+  });
+  buildFeatEditors(b.features);
   previewBranding();
 }
-function previewBranding(){
-  document.getElementById('prev-name').textContent=document.getElementById('brand-name').value||BD.name;
-  document.getElementById('prev-logo').textContent=document.getElementById('brand-emoji').value||BD.emoji;
-  document.getElementById('prev-tagline').textContent=document.getElementById('brand-tagline').value||BD.tagline;
-  document.getElementById('prev-nav-sub').textContent=document.getElementById('brand-nav-sub').value||BD.navSub;
-  document.getElementById('prev-hero-sub').textContent=document.getElementById('brand-hero-sub').value||BD.heroSub;
+
+function previewBranding() {
+  const draft = readBrandingForm();
+  document.getElementById('prev-name').textContent = draft.name;
+  document.getElementById('prev-tagline').textContent = draft.tagline;
+  document.getElementById('prev-nav-sub').textContent = draft.navSub;
+  document.getElementById('prev-hero-sub').textContent = draft.heroSub;
+  applyLogoToEl(document.getElementById('prev-logo'), draft);
+  applyLogoToEl(document.getElementById('prev-logo-sm'), draft);
 }
-function saveBranding(){
-  localStorage.setItem('site_branding',JSON.stringify(readBrandingForm()));
-  const m=document.getElementById('brand-saved');m.style.display='flex';setTimeout(()=>m.style.display='none',3500);
+
+function onLogoUpload(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  if (file.size > 900000) {
+    alert('Please use an image under 900 KB.');
+    e.target.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    pendingLogoDataUrl = reader.result;
+    document.getElementById('brand-logo-url').value = '';
+    previewBranding();
+  };
+  reader.readAsDataURL(file);
 }
-function resetBranding(){
+
+function clearLogo() {
+  pendingLogoDataUrl = '';
+  document.getElementById('brand-logo-url').value = '';
+  document.getElementById('brand-logo-file').value = '';
+  previewBranding();
+}
+
+async function saveBranding() {
+  const brand = readBrandingForm();
+  const res = await saveBrandToSupabase(sb, brand);
+  pendingLogoDataUrl = brand.logoDataUrl || null;
+  const okEl = document.getElementById('brand-saved');
+  const errEl = document.getElementById('brand-err');
+  errEl.style.display = 'none';
+  if (res.ok) {
+    document.getElementById('brand-saved-text').textContent =
+      'Saved! Everyone will see this after reloading the public page.';
+    okEl.style.display = 'flex';
+    setTimeout(() => { okEl.style.display = 'none'; }, 4500);
+  } else {
+    document.getElementById('brand-saved-text').textContent = 'Saved on this browser only.';
+    document.getElementById('brand-err-text').textContent =
+      'Run supabase-site-branding.sql in Supabase SQL Editor, then save again for all devices.';
+    okEl.style.display = 'flex';
+    errEl.style.display = 'flex';
+  }
+}
+
+async function resetBranding() {
+  if (!confirm('Reset all branding to defaults?')) return;
+  pendingLogoDataUrl = null;
   localStorage.removeItem('site_branding');
-  loadBrandingFields();
+  await sb.from('site_branding').upsert({ id: 1, settings: {}, updated_at: new Date().toISOString() }).catch(() => {});
+  await loadBrandingFields();
 }
 
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
