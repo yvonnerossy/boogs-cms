@@ -122,9 +122,14 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
 .privacy-body h4:first-child{margin-top:4px;}
 .privacy-body ul{margin:6px 0 10px 1.1rem;}
 .privacy-body li{margin-bottom:4px;}
-.privacy-check{display:flex;align-items:flex-start;gap:10px;margin-top:1rem;padding:12px 14px;border:1px solid rgba(255,255,255,0.1);border-radius:10px;background:rgba(255,255,255,0.03);cursor:pointer;font-size:0.8rem;line-height:1.5;color:rgba(255,255,255,0.72);}
-.privacy-check input{margin-top:3px;width:16px;height:16px;accent-color:#7dd3fc;flex-shrink:0;cursor:pointer;}
+.privacy-check{display:flex;align-items:flex-start;gap:12px;margin-top:1rem;padding:12px 14px;border:1px solid rgba(255,255,255,0.1);border-radius:10px;background:rgba(255,255,255,0.03);cursor:pointer;font-size:0.8rem;line-height:1.5;color:rgba(255,255,255,0.72);}
+.privacy-check input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
+.privacy-check-box{width:20px;height:20px;min-width:20px;border:2px solid rgba(255,255,255,0.45);border-radius:5px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin-top:2px;flex-shrink:0;transition:background .15s,border-color .15s;}
+.privacy-check-box::after{content:'';display:block;width:5px;height:9px;border-right:2.5px solid transparent;border-bottom:2.5px solid transparent;transform:rotate(45deg) scale(0);transition:transform .12s ease;}
+.privacy-check input[type=checkbox]:checked + .privacy-check-box{background:linear-gradient(135deg,#7dd3fc,#3b82f6);border-color:#7dd3fc;}
+.privacy-check input[type=checkbox]:checked + .privacy-check-box::after{border-color:#060818;transform:rotate(45deg) scale(1);}
 .privacy-check.field-err{border-color:rgba(239,68,68,0.45);background:rgba(239,68,68,0.06);}
+.privacy-check.field-err .privacy-check-box{border-color:rgba(239,68,68,0.7);}
 .thankyou-screen{display:none;text-align:center;padding:1rem 0;}
 .thankyou-screen.show{display:block;}
 .ty-glow{width:78px;height:78px;border-radius:50%;margin:0 auto 1.5rem;background:radial-gradient(circle at 35% 35%,rgba(125,211,252,0.55),rgba(139,92,246,0.3));border:1px solid rgba(125,211,252,0.4);display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 0 36px rgba(125,211,252,0.4);}
@@ -250,6 +255,7 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
         </details>
         <label class="privacy-check" id="privacy-check-wrap">
           <input type="checkbox" id="privacy-consent">
+          <span class="privacy-check-box" aria-hidden="true"></span>
           <span id="privacy-check-label">I agree to the Privacy Notice and consent to the processing of my personal information.</span>
         </label>
       </div>
