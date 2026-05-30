@@ -49,9 +49,21 @@ window.BRAND_DEFAULTS = {
   ]
 };
 
+window.hasSavedBrand = function(obj) {
+  if (!obj || typeof obj !== 'object') return false;
+  return Object.keys(obj).some(k => {
+    const v = obj[k];
+    if (k === 'features') return Array.isArray(v) && v.length > 0;
+    if (typeof v === 'string') return v.trim().length > 0;
+    return v != null && v !== '';
+  });
+};
+
 window.mergeBrand = function(overrides) {
   const b = { ...window.BRAND_DEFAULTS, ...(overrides || {}) };
-  if (overrides && overrides.features) b.features = overrides.features;
+  if (overrides && Array.isArray(overrides.features) && overrides.features.length) {
+    b.features = overrides.features;
+  }
   return b;
 };
 
@@ -164,22 +176,56 @@ window.applyBrandToPage = function(b) {
 };
 
 window.fetchBrandFromSupabase = async function(sb) {
-  if (!sb) return window.getBrand();
+  const local = window.getLocalBrand();
+  if (!sb) return window.mergeBrand(local);
+
   const { data, error } = await sb.from('site_branding').select('settings').eq('id', 1).maybeSingle();
-  if (error || !data || !data.settings) return window.getBrand();
-  return window.mergeBrand(data.settings);
+
+  if (error) {
+    console.warn('Branding: using saved browser copy', error.message);
+    return window.mergeBrand(local);
+  }
+
+  const remote = data && data.settings ? data.settings : null;
+  if (window.hasSavedBrand(remote)) {
+    return window.mergeBrand({ ...local, ...remote });
+  }
+  if (window.hasSavedBrand(local)) {
+    return window.mergeBrand(local);
+  }
+  return window.mergeBrand({});
 };
 
 window.saveBrandToSupabase = async function(sb, brand) {
-  localStorage.setItem('site_branding', JSON.stringify(brand));
+  try {
+    localStorage.setItem('site_branding', JSON.stringify(brand));
+  } catch (e) {
+    console.error('Branding too large for browser storage — use a smaller logo or a logo URL.', e);
+    return { ok: false, error: e, local: false, message: 'Logo file too large. Use a smaller image or paste a logo URL instead.' };
+  }
+
   if (!sb) return { ok: true, local: true };
-  const { error } = await sb.from('site_branding').upsert({ id: 1, settings: brand, updated_at: new Date().toISOString() });
-  if (error) return { ok: false, error, local: true };
-  return { ok: true };
+
+  const { error } = await sb.from('site_branding').upsert(
+    { id: 1, settings: brand, updated_at: new Date().toISOString() },
+    { onConflict: 'id' }
+  );
+
+  if (error) {
+    console.warn('Branding: saved locally only', error.message);
+    return { ok: false, error, local: true, message: error.message };
+  }
+  return { ok: true, local: true };
 };
 
 window.initPublicBranding = async function(sb) {
+  window.applyBrandToPage(window.mergeBrand(window.getLocalBrand()));
   const b = await window.fetchBrandFromSupabase(sb);
   window.applyBrandToPage(b);
+  window.addEventListener('storage', e => {
+    if (e.key === 'site_branding' && e.newValue) {
+      try { window.applyBrandToPage(JSON.parse(e.newValue)); } catch (err) {}
+    }
+  });
   return b;
 };
