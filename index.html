@@ -27,27 +27,44 @@ body{font-family:'DM Sans',sans-serif;background:#060818;color:#fff;}
 .nav-scroll-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.7);padding:8px 18px;border-radius:20px;font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
 .nav-scroll-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
 
-.hero{position:relative;z-index:10;min-height:100vh;max-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6rem 2.5rem 2rem;text-align:center;mask-image:linear-gradient(to bottom,black 0%,black 82%,transparent 100%);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 82%,transparent 100%);}
+.hero{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;padding:5.5rem 2.5rem 3rem;mask-image:linear-gradient(to bottom,black 0%,black 88%,transparent 100%);-webkit-mask-image:linear-gradient(to bottom,black 0%,black 88%,transparent 100%);}
+.hero-inner{max-width:1180px;margin:0 auto;width:100%;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr);gap:1.5rem 2.5rem;align-items:center;}
+.hero-content{display:flex;flex-direction:column;align-items:flex-start;text-align:left;}
+.hero-visual{position:relative;display:flex;justify-content:flex-end;align-items:flex-end;min-height:clamp(360px,72vh,680px);}
+.hero-photo-wrap{position:relative;width:100%;max-width:520px;height:100%;min-height:inherit;display:flex;align-items:flex-end;justify-content:flex-end;}
+.hero-photo-glow{position:absolute;inset:8% 0 12% 20%;background:radial-gradient(ellipse at 70% 60%,rgba(125,211,252,0.22) 0%,rgba(139,92,246,0.12) 35%,transparent 72%);pointer-events:none;z-index:0;filter:blur(8px);}
+.hero-photo{position:relative;z-index:1;width:100%;max-height:min(92vh,680px);object-fit:contain;object-position:bottom right;-webkit-mask-image:linear-gradient(to bottom,black 0%,black 72%,transparent 100%);mask-image:linear-gradient(to bottom,black 0%,black 72%,transparent 100%);filter:drop-shadow(0 20px 40px rgba(0,0,0,0.45));}
 @keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
 
 .hero-flag{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);padding:7px 20px;border-radius:30px;font-size:0.76rem;color:rgba(255,255,255,0.65);letter-spacing:0.4px;margin-bottom:1.75rem;backdrop-filter:blur(12px);animation:fadeUp 0.9s 0.1s both;}
 .hero-flag span{color:#7dd3fc;font-weight:600;}
 .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,9vw,7rem);line-height:0.94;letter-spacing:1px;background:linear-gradient(140deg,#fff 0%,#bfdbfe 35%,#7dd3fc 60%,#a78bfa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.3rem;animation:fadeUp 0.9s 0.2s both;}
 .hero-title-2{font-family:'Sora',sans-serif;font-size:clamp(0.9rem,2.5vw,1.4rem);font-weight:600;letter-spacing:2px;color:rgba(255,255,255,0.55);margin-bottom:1.75rem;animation:fadeUp 0.9s 0.28s both;text-transform:uppercase;}
-.purpose-banner{display:inline-flex;align-items:center;gap:10px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.28);padding:10px 22px;border-radius:12px;font-size:0.8rem;color:rgba(255,255,255,0.7);margin-bottom:1.5rem;animation:fadeUp 0.9s 0.34s both;max-width:560px;line-height:1.5;}
-.hero-body{font-size:1rem;color:rgba(255,255,255,0.52);line-height:1.75;max-width:500px;margin:0 auto 2rem;animation:fadeUp 0.9s 0.4s both;}
+.purpose-banner{display:inline-flex;align-items:center;gap:10px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.28);padding:10px 22px;border-radius:12px;font-size:0.8rem;color:rgba(255,255,255,0.7);margin-bottom:1.5rem;animation:fadeUp 0.9s 0.34s both;max-width:520px;line-height:1.5;text-align:left;}
+.hero-body{font-size:1rem;color:rgba(255,255,255,0.52);line-height:1.75;max-width:520px;margin:0 0 2rem;animation:fadeUp 0.9s 0.4s both;text-align:left;}
 .hero-body strong{color:#7dd3fc;}
-.cta-wrap{animation:fadeUp 0.9s 0.46s both;display:flex;flex-direction:column;align-items:center;gap:0.9rem;}
+.cta-wrap{animation:fadeUp 0.9s 0.46s both;display:flex;flex-direction:column;align-items:flex-start;gap:0.9rem;}
 .cta-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:12px;padding:17px 42px;border-radius:60px;border:none;cursor:pointer;font-family:'Sora',sans-serif;font-size:1rem;font-weight:700;color:#060818;background:linear-gradient(135deg,#7dd3fc 0%,#3b82f6 45%,#8b5cf6 100%);box-shadow:0 0 36px rgba(125,211,252,0.45),0 0 72px rgba(139,92,246,0.2);transition:transform 0.18s,box-shadow 0.18s;animation:pulse 3s ease-in-out infinite;}
 @keyframes pulse{0%,100%{box-shadow:0 0 36px rgba(125,211,252,0.45),0 0 72px rgba(139,92,246,0.2);}50%{box-shadow:0 0 56px rgba(125,211,252,0.7),0 0 110px rgba(139,92,246,0.35);}}
 .cta-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.28) 0%,transparent 55%);pointer-events:none;}
 .cta-btn:hover{transform:translateY(-3px) scale(1.03);}
 .cta-btn:active{transform:scale(0.97);}
 .cta-note{font-size:0.75rem;color:rgba(255,255,255,0.3);letter-spacing:0.3px;}
-.hero-stats{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2rem;animation:fadeUp 0.9s 0.54s both;}
-.stat-pill{background:rgba(255,255,255,0.055);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(14px);padding:12px 22px;border-radius:14px;text-align:center;}
-.stat-pill-num{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#7dd3fc;letter-spacing:1px;line-height:1;}
-.stat-pill-label{font-size:0.7rem;color:rgba(255,255,255,0.45);letter-spacing:0.5px;margin-top:2px;}
+.hero-stats{display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:flex-start;margin-top:2rem;animation:fadeUp 0.9s 0.54s both;width:100%;}
+.stat-pill{background:rgba(255,255,255,0.055);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(14px);padding:10px 18px;border-radius:14px;text-align:left;display:flex;align-items:center;gap:12px;min-width:130px;}
+.stat-pill-icon{width:38px;height:38px;border-radius:50%;background:rgba(125,211,252,0.12);border:1px solid rgba(125,211,252,0.22);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.stat-pill-num{font-family:'Bebas Neue',sans-serif;font-size:1.75rem;color:#7dd3fc;letter-spacing:1px;line-height:1;}
+.stat-pill-label{font-size:0.68rem;color:rgba(255,255,255,0.45);letter-spacing:0.5px;margin-top:2px;}
+@media(max-width:960px){
+  .hero-inner{grid-template-columns:1fr;gap:1.5rem;}
+  .hero-visual{min-height:340px;justify-content:center;}
+  .hero-photo-wrap{max-width:360px;margin:0 auto;}
+  .hero-content{align-items:center;text-align:center;}
+  .purpose-banner,.hero-body{text-align:center;}
+  .cta-wrap{align-items:center;}
+  .hero-stats{justify-content:center;}
+}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr;}.modal{padding:1.75rem 1.25rem;}.nav{padding:0 1.25rem;}.hero{padding:5rem 1.25rem 2rem;}}
 
 .features-section{position:relative;z-index:10;padding:4rem 1.5rem 5rem;margin-top:-6rem;}
 .features-inner{max-width:960px;margin:0 auto;}
@@ -112,7 +129,6 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
 .ty-body{font-size:0.9rem;color:rgba(255,255,255,0.5);line-height:1.75;margin-bottom:2rem;}
 .ty-again{background:none;border:1px solid rgba(125,211,252,0.28);color:#7dd3fc;padding:11px 28px;border-radius:30px;cursor:pointer;font-size:0.88rem;font-family:'Sora',sans-serif;font-weight:600;transition:all 0.2s;}
 .ty-again:hover{background:rgba(125,211,252,0.08);}
-@media(max-width:600px){.form-grid{grid-template-columns:1fr;}.modal{padding:1.75rem 1.25rem;}.nav{padding:0 1.25rem;}}
 </style>
 </head>
 <body>
@@ -130,54 +146,64 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
     <div class="nav-logo" id="nav-logo">🏘️</div>
     <div class="nav-name">
       <span id="nav-title">Boogs Community Management System</span>
-      <small>Brgy. Kapatungan · Trento, Agusan del Sur</small>
+      <small id="nav-subtitle">Brgy. Kapatungan · Trento, Agusan del Sur</small>
     </div>
   </div>
-  <button class="nav-scroll-btn" onclick="document.querySelector('.features-section').scrollIntoView({behavior:'smooth'})">Our Purpose ↓</button>
+  <button class="nav-scroll-btn" id="nav-scroll-btn" onclick="document.querySelector('.features-section').scrollIntoView({behavior:'smooth'})">Our Purpose ↓</button>
 </nav>
 
 <a href="admin.html" class="admin-link">&#9679; Admin</a>
 
 <div class="hero">
-  <div class="hero-flag">
-    <svg width="26" height="17" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;flex-shrink:0">
-      <rect width="900" height="300" fill="#0038A8"/>
-      <rect y="300" width="900" height="300" fill="#CE1126"/>
-      <polygon points="0,0 450,300 0,600" fill="#FFFFFF"/>
-      <circle cx="152" cy="300" r="58" fill="#FCD116"/>
-      <g fill="#FCD116" transform="translate(152,300)">
-        <polygon points="0,-36 7,-12 34,-12 12,5 20,28 0,14 -20,28 -12,5 -34,-12 -7,-12" transform="rotate(0) translate(0,-76)"/>
-        <polygon points="0,-36 7,-12 34,-12 12,5 20,28 0,14 -20,28 -12,5 -34,-12 -7,-12" transform="rotate(120) translate(0,-76)"/>
-        <polygon points="0,-36 7,-12 34,-12 12,5 20,28 0,14 -20,28 -12,5 -34,-12 -7,-12" transform="rotate(240) translate(0,-76)"/>
-      </g>
-    </svg>
-    <span>Brgy. Kapatungan</span> &nbsp;·&nbsp; Trento, Agusan del Sur
-  </div>
-  <div class="hero-title" id="hero-main-title">BOOGS</div>
-  <div class="hero-title-2">Community Management System</div>
-  <div class="purpose-banner">
-    <span>📋</span>
-    <div>This system helps us organize household information to better coordinate community programs for Brgy. Kapatungan residents.</div>
-  </div>
-  <p class="hero-body">Register your household and help us map out our community — <strong>emergency response, health programs, relief coordination,</strong> and more.</p>
-  <div class="cta-wrap">
-    <button class="cta-btn" onclick="openModal()"><span>📝</span> Register Your Household</button>
-    <div class="cta-note">Free &middot; Takes under a minute &middot; No account needed</div>
-  </div>
-  <div class="hero-stats">
-    <div class="stat-pill"><div class="stat-pill-num" id="s-households">—</div><div class="stat-pill-label">Households</div></div>
-    <div class="stat-pill"><div class="stat-pill-num" id="s-individuals">—</div><div class="stat-pill-label">Individuals</div></div>
-    <div class="stat-pill"><div class="stat-pill-num">22</div><div class="stat-pill-label">Puroks</div></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-flag">
+        <svg width="26" height="17" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;flex-shrink:0">
+          <rect width="900" height="300" fill="#0038A8"/>
+          <rect y="300" width="900" height="300" fill="#CE1126"/>
+          <polygon points="0,0 450,300 0,600" fill="#FFFFFF"/>
+          <circle cx="152" cy="300" r="58" fill="#FCD116"/>
+          <g fill="#FCD116" transform="translate(152,300)">
+            <polygon points="0,-36 7,-12 34,-12 12,5 20,28 0,14 -20,28 -12,5 -34,-12 -7,-12" transform="rotate(0) translate(0,-76)"/>
+            <polygon points="0,-36 7,-12 34,-12 12,5 20,28 0,14 -20,28 -12,5 -34,-12 -7,-12" transform="rotate(120) translate(0,-76)"/>
+            <polygon points="0,-36 7,-12 34,-12 12,5 20,28 0,14 -20,28 -12,5 -34,-12 -7,-12" transform="rotate(240) translate(0,-76)"/>
+          </g>
+        </svg>
+        <span id="hero-location">Brgy. Kapatungan · Trento, Agusan del Sur</span>
+      </div>
+      <div class="hero-title" id="hero-main-title">BOOGS</div>
+      <div class="hero-title-2" id="hero-subtitle">Community Management System</div>
+      <div class="purpose-banner">
+        <span>📋</span>
+        <div id="hero-purpose">This system helps us organize household information to better coordinate community programs for Brgy. Kapatungan residents.</div>
+      </div>
+      <p class="hero-body" id="hero-body">Register your household and help us map out our community — <strong>emergency response, health programs, relief coordination,</strong> and more.</p>
+      <div class="cta-wrap">
+        <button class="cta-btn" onclick="openModal()"><span>📝</span> <span id="cta-label">Register Your Household</span></button>
+        <div class="cta-note" id="cta-note">Free &middot; Takes under a minute &middot; No account needed</div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-pill"><div class="stat-pill-icon">🏠</div><div><div class="stat-pill-num" id="s-households">—</div><div class="stat-pill-label">Households</div></div></div>
+        <div class="stat-pill"><div class="stat-pill-icon">👥</div><div><div class="stat-pill-num" id="s-individuals">—</div><div class="stat-pill-label">Individuals</div></div></div>
+        <div class="stat-pill"><div class="stat-pill-icon">📍</div><div><div class="stat-pill-num">22</div><div class="stat-pill-label">Puroks</div></div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-photo-wrap">
+        <div class="hero-photo-glow"></div>
+        <img src="hero-photo.png" alt="" class="hero-photo">
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="features-section">
   <div class="features-inner">
     <div class="features-header">
-      <h2>WHY WE COLLECT THIS DATA</h2>
-      <p>We put this together so no one in the community gets left out — whether it's relief goods, health programs, or just knowing who to call in an emergency.</p>
+      <h2 id="features-title">WHY WE COLLECT THIS DATA</h2>
+      <p id="features-desc">We put this together so no one in the community gets left out — whether it's relief goods, health programs, or just knowing who to call in an emergency.</p>
       <br>
-      <div class="disclaimer">⚠️ <strong>This is NOT a campaign activity.</strong></div>
+      <div class="disclaimer">⚠️ <strong id="disclaimer-text">This is NOT a campaign activity.</strong></div>
     </div>
     <div class="features-grid">
       <div class="feat-card"><div class="feat-icon" style="background:rgba(59,130,246,0.15);">🏠</div><div class="feat-title">Household Record System</div><div class="feat-desc">Maintain an organized database of every household for efficient resource planning and community coordination.</div></div>
@@ -189,7 +215,7 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
       <div class="feat-card"><div class="feat-icon" style="background:rgba(220,38,38,0.15);">🌊</div><div class="feat-title">Disaster & Relief Coordination</div><div class="feat-desc">During typhoons or flooding, quickly identify affected families and coordinate relief distribution efficiently.</div></div>
     </div>
     <div style="text-align:center;margin-top:3rem;">
-      <button class="cta-btn" onclick="openModal()" style="margin:0 auto;"><span>📝</span> Register Your Household Now</button>
+      <button class="cta-btn" onclick="openModal()" style="margin:0 auto;"><span>📝</span> <span id="cta-bottom-label">Register Your Household Now</span></button>
     </div>
   </div>
 </div>
@@ -199,7 +225,7 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div id="form-view">
       <div class="modal-title">REGISTRATION</div>
-      <div class="modal-sub">Brgy. Kapatungan &nbsp;·&nbsp; Trento, Agusan del Sur</div>
+      <div class="modal-sub" id="modal-sub">Brgy. Kapatungan &nbsp;·&nbsp; Trento, Agusan del Sur</div>
       <div class="sec-title">🏠 Head of Household</div>
       <div class="form-grid">
         <div class="field"><label>Full Name</label><input type="text" id="hof-name" placeholder="e.g. Juan dela Cruz"></div>
@@ -236,10 +262,27 @@ const sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON);
 
 // Branding from localStorage (admin-set)
 (function(){
-  const b = JSON.parse(localStorage.getItem('site_branding') || '{}');
-  if(b.name){ const t=document.getElementById('nav-title'); if(t) t.textContent=b.name; }
-  if(b.emoji){ const l=document.getElementById('nav-logo'); if(l) l.textContent=b.emoji; }
-  if(b.tagline){ const h=document.getElementById('hero-main-title'); if(h) h.textContent=b.tagline; }
+  const D={
+    name:'Boogs Community Management System',emoji:'🏘️',tagline:'BOOGS',
+    navSub:'Brgy. Kapatungan · Trento, Agusan del Sur',heroSub:'Community Management System',
+    heroLoc:'Brgy. Kapatungan · Trento, Agusan del Sur',
+    purpose:'This system helps us organize household information to better coordinate community programs for Brgy. Kapatungan residents.',
+    heroBody:'Register your household and help us map out our community — emergency response, health programs, relief coordination, and more.',
+    cta:'Register Your Household',ctaNote:'Free · Takes under a minute · No account needed',
+    navScroll:'Our Purpose ↓',featTitle:'WHY WE COLLECT THIS DATA',
+    featDesc:"We put this together so no one in the community gets left out — whether it's relief goods, health programs, or just knowing who to call in an emergency.",
+    disclaimer:'This is NOT a campaign activity.',ctaBottom:'Register Your Household Now',
+    modalSub:'Brgy. Kapatungan · Trento, Agusan del Sur'
+  };
+  const b={...D,...JSON.parse(localStorage.getItem('site_branding')||'{}')};
+  const t=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.textContent=v;};
+  t('nav-title',b.name); t('nav-logo',b.emoji); t('hero-main-title',b.tagline);
+  t('nav-subtitle',b.navSub); t('hero-subtitle',b.heroSub);
+  t('hero-location',b.heroLoc); t('hero-purpose',b.purpose);
+  t('hero-body',b.heroBody); t('cta-label',b.cta); t('cta-note',b.ctaNote);
+  t('nav-scroll-btn',b.navScroll); t('features-title',b.featTitle);
+  t('features-desc',b.featDesc); t('disclaimer-text',b.disclaimer);
+  t('cta-bottom-label',b.ctaBottom); t('modal-sub',b.modalSub);
 })();
 
 // Load live stats from Supabase
