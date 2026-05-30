@@ -23,12 +23,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:1rem;}
 label{font-size:0.75rem;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;}
 input,select{height:44px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 14px;font-size:0.92rem;font-family:'DM Sans',sans-serif;color:var(--text);background:rgba(255,255,255,0.05);transition:border-color .2s,box-shadow .2s;outline:none;appearance:none;}
-input:focus,select:focus{border-color:rgba(125,211,252,0.5);box-shadow:0 0 0 3px rgba(125,211,252,0.1);}
+textarea{border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:0.92rem;font-family:'DM Sans',sans-serif;color:var(--text);background:rgba(255,255,255,0.05);transition:border-color .2s,box-shadow .2s;outline:none;width:100%;min-height:72px;resize:vertical;line-height:1.5;}
+input:focus,select:focus,textarea:focus{border-color:rgba(125,211,252,0.5);box-shadow:0 0 0 3px rgba(125,211,252,0.1);}
 input::placeholder{color:rgba(255,255,255,0.2);}
 select option{background:#131627;}optgroup{background:#06081e;font-style:normal;}
 .login-btn{background:linear-gradient(135deg,#7dd3fc,#818cf8);color:#05071a;border:none;padding:13px;border-radius:var(--radius-sm);font-size:0.98rem;font-weight:700;font-family:'Sora',sans-serif;cursor:pointer;width:100%;margin-top:0.5rem;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity .2s;}
 .login-btn:hover{opacity:0.88;}
 .login-err{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:#fca5a5;padding:10px 14px;border-radius:var(--radius-sm);font-size:0.83rem;display:none;align-items:center;gap:8px;margin-top:1rem;}
+.settings-block{max-width:560px;margin-bottom:2.5rem;}
+.settings-subhead{font-size:0.75rem;font-weight:700;color:#7dd3fc;text-transform:uppercase;letter-spacing:1px;margin:1.5rem 0 1rem;}
+.settings-block-title{font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:0.4rem;}
+.settings-block-sub{font-size:0.82rem;color:var(--text-muted);margin-bottom:1.5rem;line-height:1.5;}
+.settings-divider{border:none;border-top:1px solid var(--border);margin:2.5rem 0;}
+.save-msg{display:none;margin-top:1rem;padding:10px 14px;border-radius:8px;font-size:0.83rem;}
+.save-msg.ok{display:flex;align-items:center;gap:8px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#6ee7b7;}
+.save-msg.err{display:flex;align-items:center;gap:8px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);color:#fca5a5;}
+.settings-btn{background:linear-gradient(135deg,#7dd3fc,#818cf8);color:#05071a;border:none;padding:11px 28px;border-radius:9px;font-weight:700;font-family:'Sora',sans-serif;font-size:0.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;}
+.settings-btn.secondary{background:none;border:1px solid var(--border);color:var(--text-muted);font-family:'DM Sans',sans-serif;font-weight:500;}
 .admin-app{display:none;min-height:100vh;}
 .admin-app.show{display:block;}
 .admin-header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:62px;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);}
@@ -141,7 +152,7 @@ select option{background:#131627;}optgroup{background:#06081e;font-style:normal;
   <div class="admin-tabs">
     <div class="atab active" onclick="switchTab('dashboard',this)"><i class="fa-solid fa-chart-bar"></i> Dashboard</div>
     <div class="atab" onclick="switchTab('members',this)"><i class="fa-solid fa-users"></i> Registrants</div>
-    <div class="atab" onclick="switchTab('settings',this)"><i class="fa-solid fa-sliders"></i> Branding</div>
+    <div class="atab" onclick="switchTab('settings',this)"><i class="fa-solid fa-sliders"></i> Settings</div>
   </div>
   <div class="admin-main">
 
@@ -207,27 +218,62 @@ select option{background:#131627;}optgroup{background:#06081e;font-style:normal;
       <div id="members-list"><div class="loading">Loading…</div></div>
     </div>
 
-    <!-- BRANDING -->
+    <!-- SETTINGS -->
     <div class="apage" id="apage-settings">
-      <div style="max-width:520px;">
-        <div style="font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:0.4rem;">Site Branding</div>
-        <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:2rem;">Changes apply to the public page instantly on next load.</div>
-        <div class="field" style="margin-bottom:1.25rem;"><label>Site Name (nav)</label><input type="text" id="brand-name" placeholder="Boogs Community Management System" oninput="previewBranding()"></div>
-        <div class="field" style="margin-bottom:1.25rem;"><label>Logo Emoji</label><div style="display:flex;gap:10px;align-items:center;"><input type="text" id="brand-emoji" placeholder="🏘️" style="width:80px;text-align:center;font-size:1.4rem;" oninput="previewBranding()"><div style="font-size:0.78rem;color:var(--text-muted);">Paste any emoji.</div></div></div>
-        <div class="field" style="margin-bottom:2rem;"><label>Hero Big Title</label><input type="text" id="brand-tagline" placeholder="BOOGS" oninput="previewBranding()"></div>
-        <div style="display:flex;gap:10px;">
-          <button onclick="saveBranding()" style="background:linear-gradient(135deg,#7dd3fc,#818cf8);color:#05071a;border:none;padding:11px 28px;border-radius:9px;font-weight:700;font-family:'Sora',sans-serif;font-size:0.9rem;cursor:pointer;"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-          <button onclick="resetBranding()" style="background:none;border:1px solid var(--border);color:var(--text-muted);padding:11px 20px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;">Reset</button>
+      <div class="settings-block">
+        <div class="settings-block-title">Admin account</div>
+        <div class="settings-block-sub">Change your admin username or password. Works on all devices after you run <code style="color:#7dd3fc;">supabase-admin-settings.sql</code> in Supabase.</div>
+        <div class="field"><label>Username</label><input type="text" id="acct-user" placeholder="admin" autocomplete="username"></div>
+        <div class="field"><label>Current password</label><input type="password" id="acct-current" placeholder="Current password" autocomplete="current-password"></div>
+        <div class="field"><label>New password</label><input type="password" id="acct-new" placeholder="At least 6 characters" autocomplete="new-password"></div>
+        <div class="field"><label>Confirm new password</label><input type="password" id="acct-confirm" placeholder="Re-type new password" autocomplete="new-password"></div>
+        <button class="settings-btn" type="button" onclick="saveAdminAccount()"><i class="fa-solid fa-key"></i> Update password</button>
+        <div class="save-msg ok" id="acct-saved"><i class="fa-solid fa-circle-check"></i> Admin login updated.</div>
+        <div class="save-msg err" id="acct-err"><i class="fa-solid fa-circle-exclamation"></i> <span id="acct-err-text">Could not update.</span></div>
+      </div>
+
+      <hr class="settings-divider">
+
+      <div class="settings-block">
+        <div class="settings-block-title">Site branding &amp; public page text</div>
+        <div class="settings-block-sub">Saved in this browser. Reload the public page to see changes. Same browser = same edits for admin and public tabs.</div>
+
+        <div class="settings-subhead">Header &amp; logo</div>
+        <div class="field"><label>Site name (nav)</label><input type="text" id="brand-name" placeholder="Boogs Community Management System" oninput="previewBranding()"></div>
+        <div class="field"><label>Nav subtitle</label><input type="text" id="brand-nav-sub" placeholder="Brgy. Kapatungan · Trento, Agusan del Sur"></div>
+        <div class="field"><label>Logo emoji</label><input type="text" id="brand-emoji" placeholder="🏘️" style="width:80px;text-align:center;font-size:1.4rem;" oninput="previewBranding()"></div>
+
+        <div class="settings-subhead">Hero section</div>
+        <div class="field"><label>Hero big title</label><input type="text" id="brand-tagline" placeholder="BOOGS" oninput="previewBranding()"></div>
+        <div class="field"><label>Hero subtitle</label><input type="text" id="brand-hero-sub" placeholder="Community Management System"></div>
+        <div class="field"><label>Location badge</label><input type="text" id="brand-hero-loc" placeholder="Brgy. Kapatungan · Trento, Agusan del Sur"></div>
+        <div class="field"><label>Purpose banner</label><textarea id="brand-purpose" placeholder="Short explanation of why you collect data"></textarea></div>
+        <div class="field"><label>Hero description</label><textarea id="brand-hero-body" placeholder="Main paragraph under the banner"></textarea></div>
+        <div class="field"><label>Register button text</label><input type="text" id="brand-cta" placeholder="Register Your Household"></div>
+        <div class="field"><label>Button note (small text)</label><input type="text" id="brand-cta-note" placeholder="Free · Takes under a minute · No account needed"></div>
+        <div class="field"><label>Nav scroll button</label><input type="text" id="brand-nav-scroll" placeholder="Our Purpose ↓"></div>
+
+        <div class="settings-subhead">Lower section</div>
+        <div class="field"><label>Section title</label><input type="text" id="brand-feat-title" placeholder="WHY WE COLLECT THIS DATA"></div>
+        <div class="field"><label>Section description</label><textarea id="brand-feat-desc"></textarea></div>
+        <div class="field"><label>Disclaimer</label><input type="text" id="brand-disclaimer" placeholder="This is NOT a campaign activity."></div>
+        <div class="field"><label>Bottom register button</label><input type="text" id="brand-cta-bottom" placeholder="Register Your Household Now"></div>
+        <div class="field"><label>Registration modal subtitle</label><input type="text" id="brand-modal-sub" placeholder="Brgy. Kapatungan · Trento, Agusan del Sur"></div>
+
+        <div style="display:flex;gap:10px;margin-top:0.5rem;">
+          <button type="button" onclick="saveBranding()" class="settings-btn"><i class="fa-solid fa-floppy-disk"></i> Save all</button>
+          <button type="button" onclick="resetBranding()" class="settings-btn secondary">Reset defaults</button>
         </div>
-        <div id="brand-saved" style="display:none;margin-top:1rem;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#6ee7b7;padding:10px 14px;border-radius:8px;font-size:0.83rem;"><i class="fa-solid fa-circle-check"></i> Saved!</div>
+        <div id="brand-saved" class="save-msg ok"><i class="fa-solid fa-circle-check"></i> Saved! Reload the public page to see updates.</div>
         <div style="margin-top:2rem;border-top:1px solid var(--border);padding-top:1.5rem;">
           <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Preview</div>
           <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:12px;margin-bottom:1rem;">
             <div id="prev-logo" style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:20px;">🏘️</div>
-            <div><div id="prev-name" style="font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text);">Boogs Community Management System</div><div style="font-size:0.68rem;color:var(--text-muted);">Brgy. Kapatungan · Trento, Agusan del Sur</div></div>
+            <div><div id="prev-name" style="font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text);">Boogs Community Management System</div><div id="prev-nav-sub" style="font-size:0.68rem;color:var(--text-muted);">Brgy. Kapatungan · Trento, Agusan del Sur</div></div>
           </div>
           <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
             <div id="prev-tagline" style="font-family:'Sora',sans-serif;font-size:2rem;font-weight:700;background:linear-gradient(135deg,#7dd3fc,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">BOOGS</div>
+            <div id="prev-hero-sub" style="font-size:0.78rem;color:var(--text-muted);margin-top:6px;">Community Management System</div>
           </div>
         </div>
       </div>
@@ -236,26 +282,43 @@ select option{background:#131627;}optgroup{background:#06081e;font-style:normal;
 </div>
 
 <script>
-const ADMIN_USER = window.ADMIN_USER;
-const ADMIN_PASS = window.ADMIN_PASS;
 const sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON);
 let allRegistrants = [];
 let ageView='ring', sitioView='ring';
+let sessionAdminUser = null;
 
 const SITIOS=['Main Kapatungan','Sitio Cahian','Sitio Antoquia','Sitio San Antonio','Sitio Maica'];
 const SITIO_COLORS=['#38bdf8','#818cf8','#2dd4bf','#f472b6','#fb923c'];
 const AGE_GROUPS=[{label:'Under 18',min:0,max:17,color:'#34d399'},{label:'18 – 35',min:18,max:35,color:'#38bdf8'},{label:'36 – 59',min:36,max:59,color:'#818cf8'},{label:'60+',min:60,max:999,color:'#fb923c'}];
 
-function doLogin(){
+function getFallbackCredentials(){
+  return { user: window.ADMIN_USER || 'admin', pass: window.ADMIN_PASS || 'admin123' };
+}
+
+async function verifyLogin(u, p){
+  const { data, error } = await sb.rpc('verify_admin', { p_user: u, p_pass: p });
+  if(!error && data === true) return true;
+  const fb = getFallbackCredentials();
+  return u === fb.user && p === fb.pass;
+}
+
+function showLoginApp(user){
+  sessionAdminUser = user;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('admin-app').classList.add('show');
+  loadAndRenderDashboard();
+}
+
+async function doLogin(){
   const u=document.getElementById('admin-user').value.trim();
   const p=document.getElementById('admin-pass').value;
-  if(u===ADMIN_USER && p===ADMIN_PASS){
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('admin-app').classList.add('show');
-    loadAndRenderDashboard();
-  } else { document.getElementById('login-err').style.display='flex'; }
+  document.getElementById('login-err').style.display='none';
+  if(!u || !p){ document.getElementById('login-err').style.display='flex'; return; }
+  if(await verifyLogin(u, p)) showLoginApp(u);
+  else document.getElementById('login-err').style.display='flex';
 }
 function doLogout(){
+  sessionAdminUser = null;
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('admin-app').classList.remove('show');
   document.getElementById('admin-user').value='';
@@ -269,7 +332,85 @@ function switchTab(tab,el){
   document.getElementById('apage-'+tab).classList.add('active'); el.classList.add('active');
   if(tab==='dashboard') loadAndRenderDashboard();
   if(tab==='members') renderMembers();
-  if(tab==='settings') loadBrandingFields();
+  if(tab==='settings') loadSettingsFields();
+}
+
+function loadSettingsFields(){
+  loadBrandingFields();
+  document.getElementById('acct-user').value = sessionAdminUser || getFallbackCredentials().user;
+  document.getElementById('acct-current').value = '';
+  document.getElementById('acct-new').value = '';
+  document.getElementById('acct-confirm').value = '';
+  hideAcctMsgs();
+}
+
+function hideAcctMsgs(){
+  document.getElementById('acct-saved').classList.remove('ok');
+  document.getElementById('acct-saved').style.display='none';
+  document.getElementById('acct-err').classList.remove('err');
+  document.getElementById('acct-err').style.display='none';
+}
+
+function showAcctOk(msg){
+  hideAcctMsgs();
+  const el=document.getElementById('acct-saved');
+  el.innerHTML='<i class="fa-solid fa-circle-check"></i> '+(msg||'Admin login updated.');
+  el.classList.add('ok'); el.style.display='flex';
+  setTimeout(hideAcctMsgs, 4000);
+}
+
+function showAcctErr(msg){
+  hideAcctMsgs();
+  document.getElementById('acct-err-text').textContent = msg;
+  const el=document.getElementById('acct-err');
+  el.classList.add('err'); el.style.display='flex';
+}
+
+async function saveAdminAccount(){
+  const newUser = document.getElementById('acct-user').value.trim();
+  const curPass = document.getElementById('acct-current').value;
+  const newPass = document.getElementById('acct-new').value;
+  const confirm = document.getElementById('acct-confirm').value;
+
+  if(!sessionAdminUser){ showAcctErr('Please log in again.'); return; }
+  if(!newUser){ showAcctErr('Username is required.'); return; }
+  if(!curPass){ showAcctErr('Enter your current password.'); return; }
+  if(newPass.length < 6){ showAcctErr('New password must be at least 6 characters.'); return; }
+  if(newPass !== confirm){ showAcctErr('New passwords do not match.'); return; }
+
+  const { data, error } = await sb.rpc('change_admin_credentials', {
+    p_current_user: sessionAdminUser,
+    p_current_pass: curPass,
+    p_new_user: newUser,
+    p_new_pass: newPass
+  });
+
+  if(!error && data === true){
+    sessionAdminUser = newUser;
+    document.getElementById('acct-current').value = '';
+    document.getElementById('acct-new').value = '';
+    document.getElementById('acct-confirm').value = '';
+    showAcctOk('Admin login updated. Use the new password next time you sign in.');
+    return;
+  }
+
+  if(error && (error.code === 'PGRST202' || error.message?.includes('change_admin_credentials'))){
+    showAcctErr('Run supabase-admin-settings.sql in Supabase SQL Editor first, then try again.');
+    return;
+  }
+
+  if(await verifyLogin(sessionAdminUser, curPass) && newPass === curPass && newUser === sessionAdminUser){
+    showAcctErr('New login is the same as the current one.');
+    return;
+  }
+
+  const fb = getFallbackCredentials();
+  if(sessionAdminUser === fb.user && curPass === fb.pass){
+    showAcctErr('Run supabase-admin-settings.sql in Supabase to enable password changes on the live site.');
+    return;
+  }
+
+  showAcctErr('Current password is incorrect, or update failed.');
 }
 
 async function fetchAll(){
@@ -391,11 +532,58 @@ async function exportCSV(){
   a.download='kapatungan-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
 }
 
-const BD={name:'Boogs Community Management System',emoji:'🏘️',tagline:'BOOGS'};
-function loadBrandingFields(){ const b=JSON.parse(localStorage.getItem('site_branding')||'{}'); document.getElementById('brand-name').value=b.name||BD.name; document.getElementById('brand-emoji').value=b.emoji||BD.emoji; document.getElementById('brand-tagline').value=b.tagline||BD.tagline; previewBranding(); }
-function previewBranding(){ document.getElementById('prev-name').textContent=document.getElementById('brand-name').value||BD.name; document.getElementById('prev-logo').textContent=document.getElementById('brand-emoji').value||BD.emoji; document.getElementById('prev-tagline').textContent=document.getElementById('brand-tagline').value||BD.tagline; }
-function saveBranding(){ localStorage.setItem('site_branding',JSON.stringify({name:document.getElementById('brand-name').value||BD.name,emoji:document.getElementById('brand-emoji').value||BD.emoji,tagline:document.getElementById('brand-tagline').value||BD.tagline})); const m=document.getElementById('brand-saved');m.style.display='block';setTimeout(()=>m.style.display='none',3000); }
-function resetBranding(){ localStorage.removeItem('site_branding'); document.getElementById('brand-name').value=BD.name; document.getElementById('brand-emoji').value=BD.emoji; document.getElementById('brand-tagline').value=BD.tagline; previewBranding(); }
+const BD={
+  name:'Boogs Community Management System',
+  emoji:'🏘️',
+  tagline:'BOOGS',
+  navSub:'Brgy. Kapatungan · Trento, Agusan del Sur',
+  heroSub:'Community Management System',
+  heroLoc:'Brgy. Kapatungan · Trento, Agusan del Sur',
+  purpose:'This system helps us organize household information to better coordinate community programs for Brgy. Kapatungan residents.',
+  heroBody:'Register your household and help us map out our community — emergency response, health programs, relief coordination, and more.',
+  cta:'Register Your Household',
+  ctaNote:'Free · Takes under a minute · No account needed',
+  navScroll:'Our Purpose ↓',
+  featTitle:'WHY WE COLLECT THIS DATA',
+  featDesc:"We put this together so no one in the community gets left out — whether it's relief goods, health programs, or just knowing who to call in an emergency.",
+  disclaimer:'This is NOT a campaign activity.',
+  ctaBottom:'Register Your Household Now',
+  modalSub:'Brgy. Kapatungan · Trento, Agusan del Sur'
+};
+const BRAND_IDS=[
+  ['brand-name','name'],['brand-emoji','emoji'],['brand-tagline','tagline'],
+  ['brand-nav-sub','navSub'],['brand-hero-sub','heroSub'],['brand-hero-loc','heroLoc'],
+  ['brand-purpose','purpose'],['brand-hero-body','heroBody'],['brand-cta','cta'],
+  ['brand-cta-note','ctaNote'],['brand-nav-scroll','navScroll'],['brand-feat-title','featTitle'],
+  ['brand-feat-desc','featDesc'],['brand-disclaimer','disclaimer'],['brand-cta-bottom','ctaBottom'],
+  ['brand-modal-sub','modalSub']
+];
+function getStoredBranding(){ return {...BD,...JSON.parse(localStorage.getItem('site_branding')||'{}')}; }
+function readBrandingForm(){
+  const o={};
+  BRAND_IDS.forEach(([id,key])=>{ o[key]=document.getElementById(id).value.trim()||BD[key]; });
+  return o;
+}
+function loadBrandingFields(){
+  const b=getStoredBranding();
+  BRAND_IDS.forEach(([id,key])=>{ const el=document.getElementById(id); if(el) el.value=b[key]||BD[key]; });
+  previewBranding();
+}
+function previewBranding(){
+  document.getElementById('prev-name').textContent=document.getElementById('brand-name').value||BD.name;
+  document.getElementById('prev-logo').textContent=document.getElementById('brand-emoji').value||BD.emoji;
+  document.getElementById('prev-tagline').textContent=document.getElementById('brand-tagline').value||BD.tagline;
+  document.getElementById('prev-nav-sub').textContent=document.getElementById('brand-nav-sub').value||BD.navSub;
+  document.getElementById('prev-hero-sub').textContent=document.getElementById('brand-hero-sub').value||BD.heroSub;
+}
+function saveBranding(){
+  localStorage.setItem('site_branding',JSON.stringify(readBrandingForm()));
+  const m=document.getElementById('brand-saved');m.style.display='flex';setTimeout(()=>m.style.display='none',3500);
+}
+function resetBranding(){
+  localStorage.removeItem('site_branding');
+  loadBrandingFields();
+}
 
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function formatDate(iso){ if(!iso) return '—'; return new Date(iso).toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'}); }
