@@ -38,6 +38,10 @@ window.BRAND_DEFAULTS = {
   tyTitle: 'DAGHANG SALAMAT!',
   tyBody: 'Malampuson nga narehistro na ang imong pamilya sa<br><strong style="color:#7dd3fc;">Barangay Kapatungan, Trento, Agusan del Sur.</strong><br><br>Ang imong pakigbahin nakatulong sa pag-rehistro ug mapausbaw ang serbisyo sa atong komunidad.',
   tyAgain: 'Register Another Household',
+  privacyToggle: 'Read Privacy Notice and Consent',
+  privacyCheckLabel: 'I agree to the Privacy Notice and consent to the processing of my personal information.',
+  regConsentErr: 'Please agree to the Privacy Notice before submitting.',
+  privacyBody: '<h4>Privacy Notice</h4><p>This platform is designed to help collect and manage household and community information for community development, public service coordination, emergency preparedness, and other legitimate community-related activities.</p><p>By submitting information through this platform, you understand that the information you provide may include personal data such as your name, contact information, address, household details, age, and other information necessary for community records and service delivery.</p><p>The information collected will be used solely for:</p><ul><li>Maintaining community and household records</li><li>Emergency response and preparedness</li><li>Community programs and initiatives</li><li>Public service coordination</li><li>Statistical and planning purposes</li></ul><p>Your information will not be sold, rented, or shared with unauthorized third parties. Access to collected information is limited to authorized administrators and personnel who require access for legitimate operational purposes.</p><p>Reasonable measures are implemented to protect personal information from unauthorized access, disclosure, alteration, or destruction.</p><p>You may request access to, correction of, or deletion of your personal information by contacting the platform administrator.</p><h4>Consent</h4><p>By checking the box below and submitting this form, I acknowledge that:</p><ul><li>I have read and understood this Privacy Notice.</li><li>I voluntarily provide the information requested.</li><li>I consent to the collection, storage, and processing of my personal information for the purposes described above.</li><li>The information I provide is accurate and complete to the best of my knowledge.</li></ul>',
   features: [
     { icon: '🏠', title: 'Household Record System', desc: 'Maintain an organized database of every household for efficient resource planning and community coordination.' },
     { icon: '👴', title: 'Senior Citizen Registry', desc: 'Identify and track senior citizens for targeted benefits, health monitoring, and priority services.' },
@@ -162,6 +166,15 @@ window.applyBrandToPage = function(b) {
 
   const ta = document.getElementById('ty-again-btn');
   if (ta) ta.textContent = '↺ ' + b.tyAgain;
+
+  const pt = document.getElementById('privacy-toggle');
+  if (pt) pt.textContent = b.privacyToggle;
+
+  const pcl = document.getElementById('privacy-check-label');
+  if (pcl) pcl.textContent = b.privacyCheckLabel;
+
+  const pb = document.getElementById('privacy-body');
+  if (pb && b.privacyBody) pb.innerHTML = b.privacyBody;
 
   (b.features || []).forEach((f, i) => {
     const card = document.querySelector('[data-feat="' + i + '"]');
