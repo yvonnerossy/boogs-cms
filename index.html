@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
+<script src="branding.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;min-height:100%;overflow-x:hidden;scroll-behavior:smooth;}
@@ -21,7 +22,8 @@ body{font-family:'DM Sans',sans-serif;background:#060818;color:#fff;}
 
 .nav{position:fixed;top:0;left:0;right:0;z-index:400;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:64px;background:rgba(6,8,24,0.6);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.06);}
 .nav-brand{display:flex;align-items:center;gap:10px;}
-.nav-logo{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.nav-logo{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden;flex-shrink:0;}
+.nav-logo img{width:100%;height:100%;object-fit:cover;border-radius:9px;}
 .nav-name{font-family:'Sora',sans-serif;font-size:0.88rem;font-weight:700;color:#fff;line-height:1.2;}
 .nav-name small{font-size:0.62rem;color:rgba(255,255,255,0.45);font-weight:400;display:block;letter-spacing:0.3px;}
 .nav-scroll-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.7);padding:8px 18px;border-radius:20px;font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
@@ -139,7 +141,7 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
   <button class="nav-scroll-btn" id="nav-scroll-btn" onclick="document.querySelector('.features-section').scrollIntoView({behavior:'smooth'})">Our Purpose ↓</button>
 </nav>
 
-<a href="admin.html" class="admin-link">&#9679; Admin</a>
+<a href="admin.html" class="admin-link" id="admin-link">&#9679; Admin</a>
 
 <div class="hero">
   <div class="hero-inner">
@@ -161,7 +163,7 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
       <div class="hero-title" id="hero-main-title">BOOGS</div>
       <div class="hero-title-2" id="hero-subtitle">Community Management System</div>
       <div class="purpose-banner">
-        <span>📋</span>
+        <span id="purpose-icon">📋</span>
         <div id="hero-purpose">This system helps us organize household information to better coordinate community programs for Brgy. Kapatungan residents.</div>
       </div>
       <p class="hero-body" id="hero-body">Register your household and help us map out our community — <strong>emergency response, health programs, relief coordination,</strong> and more.</p>
@@ -170,9 +172,9 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
         <div class="cta-note" id="cta-note">Free &middot; Takes under a minute &middot; No account needed</div>
       </div>
       <div class="hero-stats">
-        <div class="stat-pill"><div class="stat-pill-icon">🏠</div><div><div class="stat-pill-num" id="s-households">—</div><div class="stat-pill-label">Households</div></div></div>
-        <div class="stat-pill"><div class="stat-pill-icon">👥</div><div><div class="stat-pill-num" id="s-individuals">—</div><div class="stat-pill-label">Individuals</div></div></div>
-        <div class="stat-pill"><div class="stat-pill-icon">📍</div><div><div class="stat-pill-num">22</div><div class="stat-pill-label">Puroks</div></div></div>
+        <div class="stat-pill"><div class="stat-pill-icon">🏠</div><div><div class="stat-pill-num" id="s-households">—</div><div class="stat-pill-label" id="s-households-label">Households</div></div></div>
+        <div class="stat-pill"><div class="stat-pill-icon">👥</div><div><div class="stat-pill-num" id="s-individuals">—</div><div class="stat-pill-label" id="s-individuals-label">Individuals</div></div></div>
+        <div class="stat-pill"><div class="stat-pill-icon">📍</div><div><div class="stat-pill-num" id="s-purok-num">22</div><div class="stat-pill-label" id="s-puroks-label">Puroks</div></div></div>
       </div>
     </div>
   </div>
@@ -186,14 +188,14 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
       <br>
       <div class="disclaimer">⚠️ <strong id="disclaimer-text">This is NOT a campaign activity.</strong></div>
     </div>
-    <div class="features-grid">
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(59,130,246,0.15);">🏠</div><div class="feat-title">Household Record System</div><div class="feat-desc">Maintain an organized database of every household for efficient resource planning and community coordination.</div></div>
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(168,85,247,0.15);">👴</div><div class="feat-title">Senior Citizen Registry</div><div class="feat-desc">Identify and track senior citizens for targeted benefits, health monitoring, and priority services.</div></div>
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(239,68,68,0.15);">🚨</div><div class="feat-title">Emergency Contact Database</div><div class="feat-desc">Build a reliable directory of contacts for rapid response during calamities, accidents, or health emergencies.</div></div>
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(16,185,129,0.15);">🥗</div><div class="feat-title">Health & Feeding Program</div><div class="feat-desc">Support nutrition programs and feeding initiatives by knowing who qualifies for assistance.</div></div>
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(245,158,11,0.15);">📍</div><div class="feat-title">Purok Coordination System</div><div class="feat-desc">Organize residents by purok for local coordination, community meetings, and targeted announcements.</div></div>
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(6,182,212,0.15);">👥</div><div class="feat-title">Purok-Based Population Monitoring</div><div class="feat-desc">Track population per purok and sitio to allocate resources fairly and plan effectively.</div></div>
-      <div class="feat-card"><div class="feat-icon" style="background:rgba(220,38,38,0.15);">🌊</div><div class="feat-title">Disaster & Relief Coordination</div><div class="feat-desc">During typhoons or flooding, quickly identify affected families and coordinate relief distribution efficiently.</div></div>
+    <div class="features-grid" id="features-grid">
+      <div class="feat-card" data-feat="0"><div class="feat-icon" style="background:rgba(59,130,246,0.15);">🏠</div><div class="feat-title">Household Record System</div><div class="feat-desc">Maintain an organized database of every household for efficient resource planning and community coordination.</div></div>
+      <div class="feat-card" data-feat="1"><div class="feat-icon" style="background:rgba(168,85,247,0.15);">👴</div><div class="feat-title">Senior Citizen Registry</div><div class="feat-desc">Identify and track senior citizens for targeted benefits, health monitoring, and priority services.</div></div>
+      <div class="feat-card" data-feat="2"><div class="feat-icon" style="background:rgba(239,68,68,0.15);">🚨</div><div class="feat-title">Emergency Contact Database</div><div class="feat-desc">Build a reliable directory of contacts for rapid response during calamities, accidents, or health emergencies.</div></div>
+      <div class="feat-card" data-feat="3"><div class="feat-icon" style="background:rgba(16,185,129,0.15);">🥗</div><div class="feat-title">Health & Feeding Program</div><div class="feat-desc">Support nutrition programs and feeding initiatives by knowing who qualifies for assistance.</div></div>
+      <div class="feat-card" data-feat="4"><div class="feat-icon" style="background:rgba(245,158,11,0.15);">📍</div><div class="feat-title">Purok Coordination System</div><div class="feat-desc">Organize residents by purok for local coordination, community meetings, and targeted announcements.</div></div>
+      <div class="feat-card" data-feat="5"><div class="feat-icon" style="background:rgba(6,182,212,0.15);">👥</div><div class="feat-title">Purok-Based Population Monitoring</div><div class="feat-desc">Track population per purok and sitio to allocate resources fairly and plan effectively.</div></div>
+      <div class="feat-card" data-feat="6"><div class="feat-icon" style="background:rgba(220,38,38,0.15);">🌊</div><div class="feat-title">Disaster & Relief Coordination</div><div class="feat-desc">During typhoons or flooding, quickly identify affected families and coordinate relief distribution efficiently.</div></div>
     </div>
     <div style="text-align:center;margin-top:3rem;">
       <button class="cta-btn" onclick="openModal()" style="margin:0 auto;"><span>📝</span> <span id="cta-bottom-label">Register Your Household Now</span></button>
@@ -205,15 +207,15 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div id="form-view">
-      <div class="modal-title">REGISTRATION</div>
+      <div class="modal-title" id="modal-title">REGISTRATION</div>
       <div class="modal-sub" id="modal-sub">Brgy. Kapatungan &nbsp;·&nbsp; Trento, Agusan del Sur</div>
-      <div class="sec-title">🏠 Head of Household</div>
+      <div class="sec-title" id="reg-hof-title">🏠 Head of Household</div>
       <div class="form-grid">
-        <div class="field"><label>Full Name</label><input type="text" id="hof-name" placeholder="e.g. Juan dela Cruz"></div>
-        <div class="field"><label>Phone Number</label><input type="tel" id="hof-phone" placeholder="e.g. 09171234567"></div>
-        <div class="field"><label>Age</label><input type="number" id="hof-age" placeholder="e.g. 45" min="1" max="120"></div>
+        <div class="field"><label id="reg-label-name">Full Name</label><input type="text" id="hof-name" placeholder="e.g. Juan dela Cruz"></div>
+        <div class="field"><label id="reg-label-phone">Phone Number</label><input type="tel" id="hof-phone" placeholder="e.g. 09171234567"></div>
+        <div class="field"><label id="reg-label-age">Age</label><input type="number" id="hof-age" placeholder="e.g. 45" min="1" max="120"></div>
         <div class="field full">
-          <label>Sitio / Purok — type to search</label>
+          <label id="reg-label-purok">Sitio / Purok — type to search</label>
           <div class="combo-wrap">
             <input type="text" id="purok-input" placeholder="Search purok or sitio..." autocomplete="off" oninput="filterCombo()" onfocus="openCombo()" onkeydown="comboKey(event)">
             <span class="combo-arrow">▾</span>
@@ -223,48 +225,24 @@ select option{background:#0a1032;}optgroup{background:#06081e;font-style:normal;
         </div>
       </div>
       <div class="divider"></div>
-      <div class="sec-title">👨‍👩‍👧 Household Members <span style="font-size:0.7rem;font-weight:400;color:rgba(255,255,255,0.28);margin-left:4px;">(optional)</span></div>
+      <div class="sec-title" id="reg-members-title">👨‍👩‍👧 Household Members <span id="reg-members-opt" style="font-size:0.7rem;font-weight:400;color:rgba(255,255,255,0.28);margin-left:4px;">(optional)</span></div>
       <div id="members-container"></div>
-      <button class="add-member-btn" onclick="addMember()">+ Add Household Member</button>
+      <button class="add-member-btn" id="reg-add-btn" onclick="addMember()">+ Add Household Member</button>
       <div class="form-err" id="form-err">⚠ Please fill in all required fields.</div>
       <button class="submit-btn" id="submit-btn" onclick="submitRegistration()">✓ &nbsp;Submit Registration</button>
     </div>
     <div class="thankyou-screen" id="thankyou-view">
       <div class="ty-glow">✓</div>
-      <div class="ty-title">DAGHANG SALAMAT!</div>
-      <p class="ty-body">Malampuson nga narehistro na ang imong pamilya sa<br><strong style="color:#7dd3fc;">Barangay Kapatungan, Trento, Agusan del Sur.</strong><br><br>Ang imong pakigbahin nakatulong sa pag-rehistro ug mapausbaw ang serbisyo sa atong komunidad.</p>
-      <button class="ty-again" onclick="resetForm()">↺ Register Another Household</button>
+      <div class="ty-title" id="ty-title">DAGHANG SALAMAT!</div>
+      <p class="ty-body" id="ty-body">Malampuson nga narehistro na ang imong pamilya sa<br><strong style="color:#7dd3fc;">Barangay Kapatungan, Trento, Agusan del Sur.</strong><br><br>Ang imong pakigbahin nakatulong sa pag-rehistro ug mapausbaw ang serbisyo sa atong komunidad.</p>
+      <button class="ty-again" id="ty-again-btn" onclick="resetForm()">↺ Register Another Household</button>
     </div>
   </div>
 </div>
 
 <script>
 const sb = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON);
-
-// Branding from localStorage (admin-set)
-(function(){
-  const D={
-    name:'Boogs Community Management System',emoji:'🏘️',tagline:'BOOGS',
-    navSub:'Brgy. Kapatungan · Trento, Agusan del Sur',heroSub:'Community Management System',
-    heroLoc:'Brgy. Kapatungan · Trento, Agusan del Sur',
-    purpose:'This system helps us organize household information to better coordinate community programs for Brgy. Kapatungan residents.',
-    heroBody:'Register your household and help us map out our community — emergency response, health programs, relief coordination, and more.',
-    cta:'Register Your Household',ctaNote:'Free · Takes under a minute · No account needed',
-    navScroll:'Our Purpose ↓',featTitle:'WHY WE COLLECT THIS DATA',
-    featDesc:"We put this together so no one in the community gets left out — whether it's relief goods, health programs, or just knowing who to call in an emergency.",
-    disclaimer:'This is NOT a campaign activity.',ctaBottom:'Register Your Household Now',
-    modalSub:'Brgy. Kapatungan · Trento, Agusan del Sur'
-  };
-  const b={...D,...JSON.parse(localStorage.getItem('site_branding')||'{}')};
-  const t=(id,v)=>{const el=document.getElementById(id);if(el&&v!=null)el.textContent=v;};
-  t('nav-title',b.name); t('nav-logo',b.emoji); t('hero-main-title',b.tagline);
-  t('nav-subtitle',b.navSub); t('hero-subtitle',b.heroSub);
-  t('hero-location',b.heroLoc); t('hero-purpose',b.purpose);
-  t('hero-body',b.heroBody); t('cta-label',b.cta); t('cta-note',b.ctaNote);
-  t('nav-scroll-btn',b.navScroll); t('features-title',b.featTitle);
-  t('features-desc',b.featDesc); t('disclaimer-text',b.disclaimer);
-  t('cta-bottom-label',b.ctaBottom); t('modal-sub',b.modalSub);
-})();
+initPublicBranding(sb);
 
 // Load live stats from Supabase
 async function loadStats(){
@@ -348,10 +326,11 @@ async function submitRegistration(){
     else { ni&&ni.classList.remove('field-err'); members.push({name:mn,age:ai?ai.value.trim():'',phone:pi?pi.value.trim():''}); }
   });
 
-  if(hasErr){ err.classList.add('show'); return; }
+  if(hasErr){ err.innerHTML='⚠ '+escBrandHtml(getBrand().regErr); err.classList.add('show'); return; }
   err.classList.remove('show');
 
   const btn=document.getElementById('submit-btn');
+  const b=getBrand();
   btn.disabled=true; btn.textContent='Submitting…';
 
   const { error } = await sb.from('registrants').insert({
@@ -362,8 +341,8 @@ async function submitRegistration(){
   });
 
   if(error){
-    btn.disabled=false; btn.innerHTML='✓ &nbsp;Submit Registration';
-    err.textContent='⚠ Error saving. Please try again.'; err.classList.add('show');
+    btn.disabled=false; btn.innerHTML='✓ &nbsp;'+escBrandHtml(b.regSubmit);
+    err.innerHTML='⚠ Error saving. Please try again.'; err.classList.add('show');
     console.error(error); return;
   }
 
@@ -378,7 +357,7 @@ function resetForm(){
   document.getElementById('members-container').innerHTML=''; memberCount=0;
   document.getElementById('form-err').classList.remove('show');
   [...document.querySelectorAll('.field-err')].forEach(e=>e.classList.remove('field-err'));
-  const btn=document.getElementById('submit-btn'); btn.disabled=false; btn.innerHTML='✓ &nbsp;Submit Registration';
+  const btn=document.getElementById('submit-btn'); btn.disabled=false; btn.innerHTML='✓ &nbsp;'+escBrandHtml(getBrand().regSubmit);
   document.getElementById('form-view').style.display='block';
   document.getElementById('thankyou-view').classList.remove('show');
 }
