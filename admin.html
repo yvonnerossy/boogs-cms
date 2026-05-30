@@ -301,6 +301,12 @@ select option{background:#131627;}optgroup{background:#06081e;font-style:normal;
         <div class="field"><label>Thank you message</label><textarea id="brand-ty-body" placeholder="Message after successful registration. Use &lt;br&gt; for line breaks."></textarea></div>
         <div class="field"><label>Register again button</label><input type="text" id="brand-ty-again" placeholder="Register Another Household"></div>
 
+        <div class="settings-subhead">Privacy &amp; consent</div>
+        <div class="field"><label>Expand link text</label><input type="text" id="brand-privacy-toggle" placeholder="Read Privacy Notice and Consent"></div>
+        <div class="field"><label>Checkbox label</label><input type="text" id="brand-privacy-check" placeholder="I agree to the Privacy Notice..."></div>
+        <div class="field"><label>Consent required message</label><input type="text" id="brand-reg-consent-err" placeholder="Please agree to the Privacy Notice before submitting."></div>
+        <div class="field"><label>Privacy notice text (HTML allowed)</label><textarea id="brand-privacy-body" style="min-height:160px;" placeholder="Full privacy notice shown when expanded"></textarea></div>
+
         <div style="display:flex;gap:10px;margin-top:0.5rem;">
           <button type="button" onclick="saveBranding()" class="settings-btn"><i class="fa-solid fa-floppy-disk"></i> Save all</button>
           <button type="button" onclick="resetBranding()" class="settings-btn secondary">Reset defaults</button>
@@ -617,7 +623,9 @@ const BRAND_IDS = [
   ['brand-reg-add', 'regAdd'], ['brand-reg-submit', 'regSubmit'], ['brand-reg-err', 'regErr'],
   ['brand-reg-label-name', 'regLabelName'], ['brand-reg-label-phone', 'regLabelPhone'],
   ['brand-reg-label-age', 'regLabelAge'], ['brand-reg-label-purok', 'regLabelPurok'],
-  ['brand-ty-title', 'tyTitle'], ['brand-ty-body', 'tyBody'], ['brand-ty-again', 'tyAgain']
+  ['brand-ty-title', 'tyTitle'], ['brand-ty-body', 'tyBody'], ['brand-ty-again', 'tyAgain'],
+  ['brand-privacy-toggle', 'privacyToggle'], ['brand-privacy-check', 'privacyCheckLabel'],
+  ['brand-reg-consent-err', 'regConsentErr'], ['brand-privacy-body', 'privacyBody']
 ];
 
 function buildFeatEditors(features) {
@@ -680,16 +688,29 @@ function previewBranding() {
 function onLogoUpload(e) {
   const file = e.target.files && e.target.files[0];
   if (!file) return;
-  if (file.size > 900000) {
-    alert('Please use an image under 900 KB.');
+  if (file.size > 3000000) {
+    alert('Please use an image under 3 MB.');
     e.target.value = '';
     return;
   }
   const reader = new FileReader();
-  reader.onload = () => {
-    pendingLogoDataUrl = reader.result;
-    document.getElementById('brand-logo-url').value = '';
-    previewBranding();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const max = 320;
+      let w = img.width, h = img.height;
+      const scale = Math.min(1, max / w, max / h);
+      w = Math.max(1, Math.round(w * scale));
+      h = Math.max(1, Math.round(h * scale));
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      pendingLogoDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+      document.getElementById('brand-logo-url').value = '';
+      previewBranding();
+    };
+    img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 }
@@ -710,14 +731,19 @@ async function saveBranding() {
   errEl.style.display = 'none';
   if (res.ok) {
     document.getElementById('brand-saved-text').textContent =
-      'Saved! Everyone will see this after reloading the public page.';
+      'Saved! Open or reload the public page (index.html) to see your logo and text.';
     okEl.style.display = 'flex';
-    setTimeout(() => { okEl.style.display = 'none'; }, 4500);
-  } else {
-    document.getElementById('brand-saved-text').textContent = 'Saved on this browser only.';
+    setTimeout(() => { okEl.style.display = 'none'; }, 5000);
+  } else if (res.local) {
+    document.getElementById('brand-saved-text').textContent =
+      res.message || 'Saved on this browser only.';
     document.getElementById('brand-err-text').textContent =
-      'Run supabase-site-branding.sql in Supabase SQL Editor, then save again for all devices.';
+      'For all phones/computers: run supabase-site-branding.sql in Supabase SQL Editor, then Save all again.';
     okEl.style.display = 'flex';
+    errEl.style.display = 'flex';
+  } else {
+    document.getElementById('brand-err-text').textContent =
+      res.message || 'Could not save. Try a smaller logo or use a logo URL.';
     errEl.style.display = 'flex';
   }
 }
